@@ -1,0 +1,6 @@
+{
+  "name": "Fiverr Gig Builder",
+  "description": "Create high-ranking, high-converting Fiverr gigs with SEO titles, 3-tier pricing packages, bulleted descriptions, FAQs, and buyer requirements without sharing your account.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
