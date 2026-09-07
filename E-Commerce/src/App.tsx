@@ -5,25 +5,13 @@ import { ProductQuickViewModal } from './components/ecommerce/ProductQuickViewMo
 import { CartDrawer } from './components/ecommerce/CartDrawer';
 import { CheckoutModal } from './components/ecommerce/CheckoutModal';
 import { AdminPortal } from './components/ecommerce/AdminPortal';
-import { PortfolioGuideModal } from './components/ecommerce/PortfolioGuideModal';
-
-// Gig Builder Components
-import { Header } from './components/Header';
-import { SafetyNoticeModal } from './components/SafetyNoticeModal';
-import { GigGeneratorForm } from './components/GigGeneratorForm';
-import { GigDisplay } from './components/GigDisplay';
-import { PresetBrowser } from './components/PresetBrowser';
-import { GigAuditor } from './components/GigAuditor';
-import { FiverrStepGuide } from './components/FiverrStepGuide';
 import { Toast } from './components/Toast';
-import { PRESET_GIGS } from './data/presets';
-import { GigData, GenerateGigParams } from './types';
 import { Product, CartItem, Coupon, Order } from './types/ecommerce';
 import { INITIAL_PRODUCTS, AVAILABLE_COUPONS } from './data/seedProducts';
 
 export default function App() {
-  // Main View Router
-  const [activeView, setActiveView] = useState<'storefront' | 'admin' | 'portfolio' | 'gig_builder'>('storefront');
+  // Main View Router: Storefront vs Admin Portal
+  const [activeView, setActiveView] = useState<'storefront' | 'admin'>('storefront');
 
   // E-Commerce Storefront State
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
@@ -48,7 +36,7 @@ export default function App() {
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(AVAILABLE_COUPONS[0]); // MERN20 preloaded for great UX!
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(AVAILABLE_COUPONS[0]); // MERN20 preloaded
 
   // Feedback Toast
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -152,47 +140,9 @@ export default function App() {
     showToast(`Order ${order.orderNumber} successfully placed!`);
   };
 
-  // Gig Builder State (Preserved from earlier turn)
-  const [currentGig, setCurrentGig] = useState<GigData>(PRESET_GIGS[0]);
-  const [currentTab, setCurrentTab] = useState<'generator' | 'presets' | 'auditor' | 'guide'>('generator');
-  const [isSafetyModalOpen, setIsSafetyModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleCopy = (text: string, label: string) => {
-    navigator.clipboard.writeText(text);
-    showToast(`Copied ${label} to clipboard!`);
-  };
-
-  const handleGenerate = async (params: GenerateGigParams) => {
-    setIsLoading(true);
-    try {
-      const response = await fetch('/api/generate-gig', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(params),
-      });
-      const data = await response.json();
-      if (data.gig) {
-        setCurrentGig(data.gig);
-        showToast('New Perfect Gig generated successfully!');
-      }
-    } catch (err) {
-      console.error('Failed to generate gig:', err);
-      showToast('Error connecting to AI service. Using optimized template.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSelectPreset = (gig: GigData) => {
-    setCurrentGig(gig);
-    setCurrentTab('generator');
-    showToast(`Loaded "${gig.niche}" Gig Blueprint!`);
-  };
-
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
-      {/* Top Unified Navigation */}
+      {/* Top Navigation */}
       <EcommerceNavbar
         activeView={activeView}
         onViewChange={(view) => setActiveView(view)}
@@ -226,84 +176,6 @@ export default function App() {
             onBackToStore={() => setActiveView('storefront')}
             onRefreshTrigger={fetchProducts}
           />
-        )}
-
-        {/* VIEW 3: FIVERR PORTFOLIO SHOWCASE GUIDE */}
-        {activeView === 'portfolio' && (
-          <PortfolioGuideModal
-            onGoToStore={() => setActiveView('storefront')}
-            onGoToAdmin={() => setActiveView('admin')}
-          />
-        )}
-
-        {/* VIEW 4: FIVERR GIG BUILDER TOOLS */}
-        {activeView === 'gig_builder' && (
-          <div className="space-y-6 animate-fade-in">
-            <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <h2 className="font-bold text-base text-slate-900">Fiverr Gig Content & SEO Suite</h2>
-                <p className="text-xs text-slate-500">Rank high on Fiverr search with 100% compliant titles, descriptions & pricing packages.</p>
-              </div>
-              <div className="flex gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-semibold">
-                <button
-                  onClick={() => setCurrentTab('generator')}
-                  className={`px-3 py-1.5 rounded-lg transition-all ${
-                    currentTab === 'generator' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600'
-                  }`}
-                >
-                  Generator
-                </button>
-                <button
-                  onClick={() => setCurrentTab('presets')}
-                  className={`px-3 py-1.5 rounded-lg transition-all ${
-                    currentTab === 'presets' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600'
-                  }`}
-                >
-                  Presets
-                </button>
-                <button
-                  onClick={() => setCurrentTab('auditor')}
-                  className={`px-3 py-1.5 rounded-lg transition-all ${
-                    currentTab === 'auditor' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600'
-                  }`}
-                >
-                  SEO Auditor
-                </button>
-                <button
-                  onClick={() => setCurrentTab('guide')}
-                  className={`px-3 py-1.5 rounded-lg transition-all ${
-                    currentTab === 'guide' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600'
-                  }`}
-                >
-                  6-Step Guide
-                </button>
-              </div>
-            </div>
-
-            {currentTab === 'generator' && (
-              <div className="space-y-8">
-                <GigGeneratorForm
-                  onGenerate={handleGenerate}
-                  isLoading={isLoading}
-                  onSelectPresetNiche={(nicheId) => {
-                    const found = PRESET_GIGS.find((p) => p.id === nicheId);
-                    if (found) handleSelectPreset(found);
-                  }}
-                />
-                {currentGig && (
-                  <GigDisplay
-                    gig={currentGig}
-                    onCopy={handleCopy}
-                    onOpenSafetyNotice={() => setIsSafetyModalOpen(true)}
-                  />
-                )}
-              </div>
-            )}
-
-            {currentTab === 'presets' && <PresetBrowser onSelectGig={handleSelectPreset} />}
-            {currentTab === 'auditor' && <GigAuditor onCopy={handleCopy} />}
-            {currentTab === 'guide' && <FiverrStepGuide />}
-          </div>
         )}
       </main>
 
@@ -348,15 +220,14 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-            <span className="font-semibold text-slate-700">ApexTech MERN Full-Stack E-Commerce</span>
-            <span className="text-slate-400">| Designed for Suvam Sharma's Fiverr Portfolio</span>
+            <span className="font-semibold text-slate-700">ApexTech MERN Full-Stack E-Commerce Platform</span>
           </div>
           <div className="flex items-center gap-4 text-[11px] text-slate-400">
             <span>React 19</span>
             <span>•</span>
-            <span>Express.js REST</span>
+            <span>Express.js REST APIs</span>
             <span>•</span>
-            <span>MongoDB Schema</span>
+            <span>MongoDB Document Schemas</span>
             <span>•</span>
             <span>Stripe Simulator</span>
           </div>
@@ -365,12 +236,6 @@ export default function App() {
 
       {/* Toast feedback */}
       <Toast message={toastMessage} />
-
-      {/* Safety Modal */}
-      <SafetyNoticeModal
-        isOpen={isSafetyModalOpen}
-        onClose={() => setIsSafetyModalOpen(false)}
-      />
     </div>
   );
 }

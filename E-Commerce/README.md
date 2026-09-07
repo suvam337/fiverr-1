@@ -95,7 +95,6 @@ E-Commerce/
 │   │       ├── CartDrawer.tsx
 │   │       ├── CheckoutModal.tsx
 │   │       ├── EcommerceNavbar.tsx
-│   │       ├── PortfolioGuideModal.tsx
 │   │       ├── ProductCard.tsx
 │   │       ├── ProductQuickViewModal.tsx
 │   │       └── StorefrontView.tsx

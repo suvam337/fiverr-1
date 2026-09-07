@@ -1,10 +1,10 @@
 import React from 'react';
-import { ShoppingBag, Search, Database, Layers, Camera, FileText, X, CheckCircle2 } from 'lucide-react';
+import { ShoppingBag, Search, Database, X } from 'lucide-react';
 import { CartItem } from '../../types/ecommerce';
 
 interface EcommerceNavbarProps {
-  activeView: 'storefront' | 'admin' | 'portfolio' | 'gig_builder';
-  onViewChange: (view: 'storefront' | 'admin' | 'portfolio' | 'gig_builder') => void;
+  activeView: 'storefront' | 'admin';
+  onViewChange: (view: 'storefront' | 'admin') => void;
   cartItems: CartItem[];
   onOpenCart: () => void;
   searchQuery: string;
@@ -24,26 +24,22 @@ export function EcommerceNavbar({
 
   return (
     <header className="sticky top-0 z-30 bg-slate-900 text-white border-b border-slate-800 shadow-md">
-      {/* Top micro-bar for portfolio & tech badges */}
+      {/* Top micro-bar for system status */}
       <div className="bg-slate-950 px-4 py-1.5 text-xs text-slate-400 flex flex-wrap items-center justify-between border-b border-slate-800/80">
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-1 text-emerald-400 font-medium">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Production MERN Demo
+            Full-Stack MERN Platform
           </span>
           <span className="text-slate-600">|</span>
-          <span className="hidden sm:inline text-slate-300 font-mono text-[11px]">
+          <span className="text-slate-300 font-mono text-[11px]">
             MongoDB Atlas • Express REST APIs • React 19 • Node.js
           </span>
         </div>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => onViewChange('portfolio')}
-            className="flex items-center gap-1 text-amber-400 hover:text-amber-300 font-medium transition-colors cursor-pointer"
-          >
-            <Camera className="w-3.5 h-3.5" />
-            <span>Fiverr Portfolio Guide & Screenshots</span>
-          </button>
+        <div className="hidden sm:flex items-center gap-3 text-[11px] text-slate-400">
+          <span>Stripe Simulator Connected</span>
+          <span className="text-slate-600">•</span>
+          <span>Port 3000 Active</span>
         </div>
       </div>
 
@@ -88,29 +84,7 @@ export function EcommerceNavbar({
               }`}
             >
               <Database className="w-3.5 h-3.5" />
-              Admin & REST API
-            </button>
-            <button
-              onClick={() => onViewChange('portfolio')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
-                activeView === 'portfolio'
-                  ? 'bg-amber-600 text-white shadow-sm'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
-              }`}
-            >
-              <Camera className="w-3.5 h-3.5" />
-              Portfolio Showcase
-            </button>
-            <button
-              onClick={() => onViewChange('gig_builder')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
-                activeView === 'gig_builder'
-                  ? 'bg-slate-700 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
-              }`}
-            >
-              <FileText className="w-3.5 h-3.5" />
-              Gig Tools
+              Admin & Inventory Portal
             </button>
           </nav>
         </div>
@@ -129,7 +103,7 @@ export function EcommerceNavbar({
             {searchQuery && (
               <button
                 onClick={() => onSearchChange('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white cursor-pointer"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -139,7 +113,7 @@ export function EcommerceNavbar({
 
         {/* Right actions */}
         <div className="flex items-center gap-3">
-          {/* Mobile view dropdown or quick switcher */}
+          {/* Mobile view quick switcher */}
           <div className="md:hidden flex items-center gap-1">
             <button
               onClick={() => onViewChange(activeView === 'storefront' ? 'admin' : 'storefront')}
